@@ -33,20 +33,18 @@ public class BankAccount {
         this.balance = balance;
     }
 
-    public void depositing(double depositAmount){
+    public  synchronized void depositing(double depositAmount){
         if(depositAmount>0) {
-            balance += depositAmount;
+            balance=balance + depositAmount;
             System.out.println("you deposit this amount:" + depositAmount + "on this account " + getAccountNumber() + "in this name :" + accountHolderName + "successfully");
         }
     }
-     public void withdrawing(double withdrawAmount){
-        if(withdrawAmount>balance){
-            System.out.println(" transaction failed,  insufficient balance ");
-        }
-        else{
-
-            double updatedBalance= balance-withdrawAmount;
-            System.out.println("you with draw this amount successfully"+ withdrawAmount + " your new balance is:"+ updatedBalance);
+     public  synchronized boolean withdrawing(double withdrawAmount) {
+         if (withdrawAmount <=balance) {
+             balance-=withdrawAmount;
+             return true;
+         }
+         return false;
         }
      }
-}
+

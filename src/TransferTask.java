@@ -1,4 +1,6 @@
-public class TransferTask  implements Runnable{
+import java.util.concurrent.Callable;
+
+public class TransferTask  implements Callable<String> {
     private BankAccount sourceAccount;
     private BankAccount destinationAccount;
     private Double amountToTransfer;
@@ -9,12 +11,23 @@ public class TransferTask  implements Runnable{
         this.amountToTransfer = amountToTransfer;
     }
 
-    @Override
     public void run() {
-        sourceAccount.withdrawing(amountToTransfer);
-        destinationAccount.depositing(amountToTransfer);
+
+
 
     }
 
 
+    @Override
+    public String call() throws Exception {
+        boolean success=sourceAccount.withdrawing(amountToTransfer);
+        if(success){
+            destinationAccount.depositing(amountToTransfer);
+            return " Successfully recieve "+ amountToTransfer + "From" + sourceAccount.getAccountHolderName() + "to "+ destinationAccount.getAccountHolderName();
+        }
+        else {
+            return " transaction failed  , insuficient balance on this account"+sourceAccount.getAccountHolderName()+ amountToTransfer;
+
+        }
+    }
 }
